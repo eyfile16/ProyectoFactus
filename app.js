@@ -14,7 +14,7 @@ app.use("/api/factura", factura)
 app.use(express.static('..pruebaproyecto/pruebaproyecto'))
 app.use("/api/productos",productos)
 app.use("/api/usuario",usuario)
-
+app.use(express.static("public"))
 
 require('dotenv').config();
 
