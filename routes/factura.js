@@ -1,13 +1,10 @@
 const express = require("express");
-const { postFactura, getFacturas,getFactura } =require("../controllers/factura"); ;
+const { postFactura, getFacturas, getFactura } = require("../controllers/factura"); // ✅ Importación correcta
 
 const router = express.Router();
 
-router.post("/", [ 
-], postFactura);
+router.post("/", postFactura);
+router.get("/facturas", getFacturas);
+router.get("/facturas/:id", getFactura);  // 🔥 Asegúrate de que esta ruta acepta un ID
 
-router.get("/facturas/id",[
-], getFacturas);
-router.get("/facturas",[
-],getFactura);
-module.exports=router
+module.exports = router;

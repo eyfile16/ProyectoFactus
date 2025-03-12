@@ -1,60 +1,66 @@
-const  Usuario=require('../models/usuario.js') ;
 
-exports.createFactura = async (req, res) => {
-  try {
-    const nuevaFactura = new Factura(req.body);
-    await nuevaFactura.save();
-    res.status(201).json({ message: "Factura creada con éxito", factura: nuevaFactura });
-  } catch (error) {
-    res.status(400).json({ message: "Error al crear la factura", error: error.message });
-  }
-};
+const Usuario = require('../models/usuario.js');
 
-// Obtener todas las facturas
-exports.getFacturas = async (req, res) => {
+// 📌 Crear un nuevo usuario (POST)
+const postUsuario = async (req, res) => {
   try {
-    const facturas = await Factura.find();
-    res.status(200).json(facturas);
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener facturas", error: error.message });
-  }
-};
-
-// Obtener una factura por ID
-exports.getFacturaById = async (req, res) => {
-  try {
-    const factura = await Factura.findById(req.params.id);
-    if (!factura) {
-      return res.status(404).json({ message: "Factura no encontrada" });
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ mensaje: "El cuerpo de la solicitud está vacío" });
     }
-    res.status(200).json(factura);
+
+    const nuevoUsuario = new Usuario(req.body);
+    await nuevoUsuario.save();
+    res.status(201).json(nuevoUsuario);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener la factura", error: error.message });
+    console.error("Error al crear el usuario:", error);
+    res.status(500).json({ mensaje: "Error al crear el usuario", error });
   }
 };
 
-// Actualizar una factura por ID
-exports.updateFactura = async (req, res) => {
+// 📌 Obtener todos los usuarios (GET)
+const getUsuarios = async (req, res) => {
   try {
-    const facturaActualizada = await Factura.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!facturaActualizada) {
-      return res.status(404).json({ message: "Factura no encontrada" });
-    }
-    res.status(200).json({ message: "Factura actualizada con éxito", factura: facturaActualizada });
+    const usuarios = await Usuario.find();
+    res.status(200).json(usuarios);
   } catch (error) {
-    res.status(400).json({ message: "Error al actualizar la factura", error: error.message });
+    console.error("Error al obtener los usuarios:", error);
+    res.status(500).json({ mensaje: "Error al obtener los usuarios", error });
   }
 };
 
-// Eliminar una factura por ID
-exports.deleteFactura = async (req, res) => {
+// 📌 Obtener un usuario por ID (GET)
+const getUsuario = async (req, res) => {
   try {
-    const facturaEliminada = await Factura.findByIdAndDelete(req.params.id);
-    if (!facturaEliminada) {
-      return res.status(404).json({ message: "Factura no encontrada" });
+    const { id } = req.params;
+    const usuario = await Usuario.findById(id);
+    
+    if (!usuario) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
-    res.status(200).json({ message: "Factura eliminada con éxito" });
+    
+    res.status(200).json(usuario);
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar la factura", error: error.message });
+    console.error("Error al obtener el usuario:", error);
+    res.status(500).json({ mensaje: "Error al obtener el usuario", error });
   }
 };
+
+// 📌 Actualizar un usuario por ID (PUT)
+const putUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, { new: true });
+    
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+    
+    res.status(200).json(usuarioActualizado);
+  } catch (error) {
+    console.error("Error al actualizar el usuario:", error);
+    res.status(500).json({ mensaje: "Error al actualizar el usuario", error });
+  }
+};
+
+module.exports = { postUsuario, getUsuarios, getUsuario, putUsuario };
+

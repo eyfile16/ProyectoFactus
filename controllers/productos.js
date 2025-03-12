@@ -1,68 +1,47 @@
+
 const Producto = require ('../models/productos.js')
 
-const crearFactura = async (req, res) => {
+// 📌 Crear un nuevo producto (POST)
+const postProducto = async (req, res) => {
   try {
-    const nuevaFactura = new Factura(req.body);
-    await nuevaFactura.save();
-    res.status(201).json(nuevaFactura);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-// Obtener todas las facturas
-const obtenerFacturas = async (req, res) => {
-  try {
-    const facturas = await Factura.find();
-    res.status(200).json(facturas);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Obtener una factura por ID
-const obtenerFacturaPorId = async (req, res) => {
-  try {
-    const factura = await Factura.findById(req.params.id);
-    if (!factura) {
-      return res.status(404).json({ error: "Factura no encontrada" });
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ mensaje: "El cuerpo de la solicitud está vacío" });
     }
-    res.status(200).json(factura);
+
+    const nuevoProducto = new Producto(req.body);
+    await nuevoProducto.save();
+    res.status(201).json(nuevoProducto);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error al crear el producto", error);
+    res.status(500).json({ mensaje: "Error al crear el producto", error });
   }
 };
 
-// Actualizar una factura por ID
-const actualizarFactura = async (req, res) => {
+// 📌 Obtener todos los productos (GET)
+const getProductos = async (req, res) => {
   try {
-    const facturaActualizada = await Factura.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!facturaActualizada) {
-      return res.status(404).json({ error: "Factura no encontrada" });
-    }
-    res.status(200).json(facturaActualizada);
+    const productos = await Producto.find();
+    res.status(200).json(productos);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error al obtener los productos", error);
+    res.status(500).json({ mensaje: "Error al obtener los productos", error });
   }
 };
 
-// Eliminar una factura por ID
-const eliminarFactura = async (req, res) => {
+// 📌 Obtener un producto por ID (GET)
+const getProducto = async (req, res) => {
   try {
-    const facturaEliminada = await Factura.findByIdAndDelete(req.params.id);
-    if (!facturaEliminada) {
-      return res.status(404).json({ error: "Factura no encontrada" });
+    const { id } = req.params;
+    const producto = await Producto.findById(id);
+    if (!producto) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
     }
-    res.status(200).json({ message: "Factura eliminada correctamente" });
+    res.status(200).json(producto);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error al obtener el producto", error);
+    res.status(500).json({ mensaje: "Error al obtener el producto", error });
   }
 };
 
-module.exports = {
-  crearFactura,
-  obtenerFacturas,
-  obtenerFacturaPorId,
-  actualizarFactura,
-  eliminarFactura,
-};
+module.exports = { postProducto, getProductos, getProducto };
+
