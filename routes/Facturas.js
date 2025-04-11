@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { postFacturas, getFacturas, getFactura } from "../controllers/Facturas.js"; 
+import { postFacturas, getFacturas, getFactura, putFactura, deleteFactura } from "../controllers/Facturas.js";
 
-const router =Router();
+const router = Router();
 
-router.get("/", getFactura);
+router.get("/", getFactura); // ← posiblemente debería ser getFacturas
 router.post("/", postFacturas);
 router.get("/bills", getFacturas);
+router.put("/:id", putFactura);
+router.delete("/:id", deleteFactura); // ✅ Ruta para DELETE
 
-
-export default router
+export default router;
