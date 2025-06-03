@@ -5,7 +5,7 @@ import {getUsuarios,getUsuario,postUsuarios,putUsuarios,deleteUsuario} from '../
 const router =Router();
 
 router.post("/", [] , postUsuarios);
-router.get("/users", getUsuarios)
+router.get("/", getUsuarios)
 router.get("/:id", getUsuario);
 router.put("/:id", putUsuarios);
 router.delete("/:id", deleteUsuario);

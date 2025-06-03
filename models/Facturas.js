@@ -17,8 +17,34 @@ const FacturasSchema = new mongoose.Schema({
             },
             required: ["start_date", "start_time", "end_date", "end_time"]
         },
-     customer: {type: mongoose.Schema.Types.ObjectId, ref: "Usuarios"},
-     items: {type: mongoose.Schema.Types.ObjectId, ref: "ProductosyServicios"},
+        customer: {
+            identification: { type: String },
+            dv: { type: String },
+            company: { type: String },
+            trade_name: { type: String },
+            names: { type: String },
+            address: { type: String },
+            email: { type: String },
+            phone: { type: String },
+            legal_organization_id: { type: String },
+            tribute_id: { type: String },
+            identification_document_id: { type: String },
+            municipality_id: { type: String }
+        },
+        items: [{
+            scheme_id: { type: String },
+            code_reference: { type: String },
+            name: { type: String },
+            quantity: { type: Number },
+            discount_rate: { type: Number },
+            price: { type: Number },
+            tax_rate: { type: Number },
+            unit_measure_id: { type: Number },
+            standard_code_id: { type: Number },
+            is_excluded: { type: Number },
+            tribute_id: { type: Number },
+            withholding_taxes: { type: Array, default: [] }
+        }]
 });
 
 export default mongoose.model('Facturas', FacturasSchema);
